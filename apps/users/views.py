@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework.parsers import MultiPartParser
 from rest_framework.viewsets import ModelViewSet
-from users.models import UserProfile
-from users.serializers import UserProfileSerializer, UserFollowingModelSerializer, UserFollowModelSerializer
+from .models import UserProfile
+from .serializers import UserProfileSerializer, UserFollowingModelSerializer, UserFollowModelSerializer
 
 
 class UserProfileModelViewSet(ModelViewSet):

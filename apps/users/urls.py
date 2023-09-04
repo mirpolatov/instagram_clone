@@ -2,8 +2,8 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
-from apps.users.views import UserProfileModelViewSet
-from users.views import UserFollowModelViewSet
+from .views import UserProfileModelViewSet
+from .views import UserFollowModelViewSet
 
 router = DefaultRouter()
 router.register('users', UserProfileModelViewSet, basename="users")
