@@ -2,7 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db.models import CharField, ImageField, TextField, BooleanField, ManyToManyField
 
 
-class Userprofile(AbstractUser):
+class UserProfile(AbstractUser):
     fullname = CharField(max_length=100, null=True)
     password = CharField(max_length=255, null=True, blank=True)
     image = ImageField(upload_to='profile_image/',

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.parsers import MultiPartParser
 from rest_framework.viewsets import ModelViewSet
-from .models import UserProfile
+from .models.users import UserProfile
 from .serializers import UserProfileSerializer, UserFollowingModelSerializer, UserFollowModelSerializer
 
 
@@ -10,6 +10,9 @@ class UserProfileModelViewSet(ModelViewSet):
     # permission_classes = True
     serializer_class = UserProfileSerializer
     parser_classes = [MultiPartParser]
+
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
 
 
 class UserFollowModelViewSet(ModelViewSet):
