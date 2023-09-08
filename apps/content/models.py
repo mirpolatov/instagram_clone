@@ -31,7 +31,7 @@ class Reel(BaseModel):
     id = CharField(primary_key=True, default=unique_id, max_length=36)
     caption = TextField(null=True, blank=True)
     author = ForeignKey('users.UserProfile', on_delete=CASCADE)
-    media = FileField(upload_to='reels/', validators=[FileExtensionValidator(['mp4', 'avi', 'mkv'])])
+    media = FileField(upload_to='reels/', validators=[FileExtensionValidator(['mp4', 'avi', 'jpg', 'mkv'])])
     location = CharField(max_length=255, null=True, blank=True)
 
     @property
@@ -52,18 +52,36 @@ class Comment(Model):
     user = ForeignKey('users.UserProfile', CASCADE)
     comment = CharField(max_length=255)
     posted_on = DateTimeField(auto_now_add=True)
-    post = ForeignKey('content.Post', on_delete=CASCADE, related_name='comments', null=True)
-    reel = ForeignKey('content.Reel', on_delete=CASCADE, related_name='comments', null=True)
+    post = ForeignKey('content.Post', on_delete=CASCADE, related_name='comments', null=True, blank=True)
 
     def __str__(self):
         return self.comment
 
     class Meta:
-        unique_together = ('post', 'reel')
+        unique_together = ('post',)
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        if not (self.post and self.reel):
-            raise ValidationError('You must specify one of the following fields to save comments, fields: "post, reel"')
+        if not self.post:
+            raise ValidationError('You must specify one of the following fields to save comments, fields: "post"')
+        super().save(force_insert, force_update, using, update_fields)
+
+
+class CommentReel(Model):
+    parent = ForeignKey('self', CASCADE, null=True, related_name='reply_comments')
+    user = ForeignKey('users.UserProfile', CASCADE)
+    comment = CharField(max_length=255)
+    posted_on = DateTimeField(auto_now_add=True)
+    reel = ForeignKey('content.Reel', on_delete=CASCADE, related_name='reels_comments', null=True)
+
+    def __str__(self):
+        return self.comment
+
+    class Meta:
+        unique_together = ('reel',)
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        if not self.reel:
+            raise ValidationError('You must specify one of the following fields to save comments, fields: " reel"')
         super().save(force_insert, force_update, using, update_fields)
 
 

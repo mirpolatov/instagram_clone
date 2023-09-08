@@ -17,7 +17,7 @@ from content.serializers.post import PostModelSerializer, UpdatePostModelSeriali
 )]))
 class PostModelViewSet(ModelViewSet):
     serializer_class = PostModelSerializer
-    queryset = Post.objects.all()
+
     parser_classes = (MultiPartParser,)
     http_method_names = ('get', 'post', 'patch', 'delete')
 
@@ -25,3 +25,7 @@ class PostModelViewSet(ModelViewSet):
         if self.action == 'partial_update':
             return UpdatePostModelSerializer
         return super().get_serializer_class()
+
+    def get_queryset(self):
+        queryset = Post.objects.filter(author=self.request.user.id)
+        return queryset
